@@ -16,6 +16,15 @@ interface NotionProperty {
   アクセス: string | null;
   物件の状態: string | null;
   建ぺい率容積率: string | null;
+  // AirDNA関連
+  AirDNA_対象エリア: string | null;
+  AirDNA_リスティング数: number | null;
+  AirDNA_稼働率: number | null;
+  AirDNA_ADR: number | null;
+  AirDNA_RevPAR: number | null;
+  AirDNA_年間売上予測: number | null;
+  AirDNA_調査日: string | null;
+  AirDNA_備考: string | null;
 }
 
 export async function fetchProperties(): Promise<NotionProperty[]> {
@@ -60,6 +69,15 @@ function parseProperty(item: any): NotionProperty {
     アクセス: getRichText(props['アクセス']),
     物件の状態: getSelect(props['物件の状態']),
     建ぺい率容積率: getRichText(props['建ぺい率/容積率']),
+    // AirDNA関連
+    AirDNA_対象エリア: getRichText(props['AirDNA_対象エリア']),
+    AirDNA_リスティング数: getNumber(props['AirDNA_リスティング数']),
+    AirDNA_稼働率: getNumber(props['AirDNA_稼働率']),
+    AirDNA_ADR: getNumber(props['AirDNA_ADR']),
+    AirDNA_RevPAR: getNumber(props['AirDNA_RevPAR']),
+    AirDNA_年間売上予測: getNumber(props['AirDNA_年間売上予測']),
+    AirDNA_調査日: getDate(props['AirDNA_調査日']),
+    AirDNA_備考: getRichText(props['AirDNA_備考']),
   };
 }
 
@@ -112,6 +130,19 @@ export function formatPropertiesForLLM(properties: NotionProperty[]): string {
     if (prop.都市計画) lines.push(`都市計画: ${prop.都市計画}`);
     if (prop.アクセス) lines.push(`アクセス: ${prop.アクセス}`);
     if (prop.物件の状態) lines.push(`状態: ${prop.物件の状態}`);
+
+    // AirDNA情報
+    if (prop.AirDNA_対象エリア || prop.AirDNA_年間売上予測 || prop.AirDNA_稼働率) {
+      lines.push('【AirDNA民泊分析データ】');
+      if (prop.AirDNA_対象エリア) lines.push(`  対象エリア: ${prop.AirDNA_対象エリア}`);
+      if (prop.AirDNA_リスティング数) lines.push(`  リスティング数: ${prop.AirDNA_リスティング数}件`);
+      if (prop.AirDNA_稼働率) lines.push(`  稼働率: ${(prop.AirDNA_稼働率 * 100).toFixed(1)}%`);
+      if (prop.AirDNA_ADR) lines.push(`  ADR(平均日額): ${prop.AirDNA_ADR.toLocaleString()}円`);
+      if (prop.AirDNA_RevPAR) lines.push(`  RevPAR: ${prop.AirDNA_RevPAR.toLocaleString()}円`);
+      if (prop.AirDNA_年間売上予測) lines.push(`  年間売上予測: ${prop.AirDNA_年間売上予測.toLocaleString()}円`);
+      if (prop.AirDNA_調査日) lines.push(`  調査日: ${prop.AirDNA_調査日}`);
+      if (prop.AirDNA_備考) lines.push(`  備考: ${prop.AirDNA_備考}`);
+    }
 
     lines.push('');
   });
