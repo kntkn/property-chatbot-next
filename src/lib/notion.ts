@@ -7,8 +7,8 @@ interface NotionProperty {
   市区町村: string | null;
   町名番地: string | null;
   販売価格: number | null;
-  土地面積㎡: number | null;
-  建物面積㎡: number | null;
+  土地面積: number | null;
+  建物面積: number | null;
   築年月: string | null;
   構造: string | null;
   用途地域: string | null;
@@ -51,8 +51,8 @@ function parseProperty(item: any): NotionProperty {
     市区町村: getRichText(props['市区町村']),
     町名番地: getRichText(props['町名番地']),
     販売価格: getNumber(props['販売価格']),
-    土地面積㎡: getNumber(props['土地面積㎡']),
-    建物面積㎡: getNumber(props['建物面積㎡']),
+    土地面積: getNumber(props['土地面積㎡']),
+    建物面積: getNumber(props['建物面積㎡']),
     築年月: getDate(props['築年月']),
     構造: getSelect(props['構造']),
     用途地域: getSelect(props['用途地域']),
@@ -104,8 +104,8 @@ export function formatPropertiesForLLM(properties: NotionProperty[]): string {
       lines.push('販売価格: 相談');
     }
 
-    if (prop.土地面積㎡) lines.push(`土地面積: ${prop.土地面積㎡.toFixed(2)}㎡`);
-    if (prop.建物面積㎡) lines.push(`建物面積: ${prop.建物面積㎡.toFixed(2)}㎡`);
+    if (prop.土地面積) lines.push(`土地面積: ${prop.土地面積.toFixed(2)}㎡`);
+    if (prop.建物面積) lines.push(`建物面積: ${prop.建物面積.toFixed(2)}㎡`);
     if (prop.築年月) lines.push(`築年月: ${prop.築年月}`);
     if (prop.構造) lines.push(`構造: ${prop.構造}`);
     if (prop.用途地域) lines.push(`用途地域: ${prop.用途地域}`);
